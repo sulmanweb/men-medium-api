@@ -1,0 +1,33 @@
+{
+  "name": "medium-api",
+  "version": "0.0.1",
+  "private": false,
+  "license": "MIT",
+  "scripts": {
+    "start": "yarn prod",
+    "server": "babel-node ./src/entry",
+    "server:prod": "node ./dist/entry",
+    "dev": "NODE_ENV=development npm-run-all server",
+    "clean": "rimraf dist",
+    "build": "babel ./src --out-dir dist",
+    "prod": "NODE_ENV=production npm-run-all clean build server:prod",
+    "watch": "nodemon"
+  },
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express": "~4.16.1",
+    "lodash": "^4.17.15",
+    "mongoose": "^5.6.9",
+    "morgan": "~1.9.1",
+    "npm-run-all": "^4.1.5"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.5.5",
+    "@babel/core": "^7.5.5",
+    "@babel/node": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "nodemon": "^1.19.1",
+    "rimraf": "^2.6.3"
+  }
+}
