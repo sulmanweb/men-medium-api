@@ -24,13 +24,16 @@ const signUp = async (req, res) => {
 
 const signIn = async (req, res) => {
   try {
-    const user = await userModel.User.findOne({email: req.body.email})
+    const user = await userModel.User.findOne({email: req.body.email});
     if (user) {
       try {
         try {
-          await user.checkPassword(req.body.password)
-          const token = await newToken(user);
-          res.status(200).json(userView.auth(user, token))
+          if (await user.checkPassword(req.body.password)) {
+            const token = await newToken(user);
+            res.status(200).json(userView.auth(user, token))
+          } else {
+            errorRes(res, 401);
+          }
         } catch (e) {
           errorRes(res, 400, e.message);
         }
@@ -58,4 +61,23 @@ const signOut = async (req, res) => {
   }
 };
 
-export default {signUp, signIn, signOut}
+const validateToken = async (req, res) => {
+  res.status(200).json(userView._userSelf(req.currentUser));
+};
+
+const changePassword = async (req, res) => {
+  try {
+    await userModel.User.findById(req.currentUser._id, function (err, user) {
+      if (user) {
+        user.password = req.body.password;
+        user.save();
+      }
+    });
+    res.status(200).json({message: 'Your Password has been changed successfully'})
+  } catch (e) {
+    console.error(e);
+    errorRes(res, 400, e.message);
+  }
+};
+
+export default {signUp, signIn, signOut, validateToken, changePassword}

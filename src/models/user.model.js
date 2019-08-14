@@ -32,7 +32,7 @@ userSchema.pre('save', function (next) {
     if (err) {
       return next(err)
     }
-
+    console.log(this.password, hash);
     this.password = hash;
     next()
   })

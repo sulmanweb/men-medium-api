@@ -1,5 +1,6 @@
 import config from '../config'
 import sessionModel from '../models/session.model'
+import userModel from '../models/user.model'
 import jwt from 'jsonwebtoken'
 import {errorRes} from '../lib/errorResponse'
 
@@ -24,9 +25,10 @@ export const authenticateUser = (req, res, next) => {
       } else {
         try {
           const session = await sessionModel.Session.findOne({token: decoded.token, status: true});
+          const user = await userModel.User.findById(session.user);
           if (session) {
             req.authToken = session.token;
-            req.currentUser = session.user;
+            req.currentUser = user;
             next();
           } else {
             return errorRes(res, 401);
@@ -49,17 +51,22 @@ export const getCurrentUser = (req, res, next) => {
     token = token.slice(7, token.length);
   }
   if (token) {
-    jwt.verify(token, config.secrets.jwt, (err, decoded) => {
+    jwt.verify(token, config.secrets.jwt, async (err, decoded) => {
       if (err) {
         next();
       } else {
-        const session = sessionModel.Session.findOne({token: decoded.token});
-        if (session) {
-          req.authToken = session.token;
-          req.currentUser = session.user;
+        try {
+          const session = await sessionModel.Session.findOne({token: decoded.token, status: true});
+          const user = await userModel.User.findById(session.user);
+          if (session) {
+            req.authToken = session.token;
+            req.currentUser = user;
+            next();
+          } else {
+            next();
+          }
+        } catch (e) {
           next();
-        } else {
-          next()
         }
       }
     });
