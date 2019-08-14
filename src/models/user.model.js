@@ -24,7 +24,7 @@ const userSchema = new mongoose.Schema(
 );
 
 // Change password to hash
-userSchema.pre('save', (next) => {
+userSchema.pre('save', function (next) {
   if (!this.isModified('password')) {
     return next()
   }
@@ -39,7 +39,7 @@ userSchema.pre('save', (next) => {
 });
 
 // Compare password with hash
-userSchema.methods.checkPassword = (password) => {
+userSchema.methods.checkPassword = function (password) {
   const passwordHash = this.password;
   return new Promise((resolve, reject) => {
     bcrypt.compare(password, passwordHash, (err, same) => {
@@ -52,4 +52,6 @@ userSchema.methods.checkPassword = (password) => {
 };
 
 // export user
-export const User = mongoose.model('users', userSchema);
+const User = mongoose.model('users', userSchema);
+
+export default {User}

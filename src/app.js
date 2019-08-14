@@ -8,6 +8,7 @@ import {connectDb} from "./config/database";
 import config from './config'
 
 import indexRouter from './routes/index'
+import authRouter from './routes/auth.route'
 
 const app = express();
 
@@ -31,6 +32,7 @@ app.use(express.static(path.join(__dirname, '../public')));
 app.use(cors());
 
 app.use('/api', indexRouter);
+app.use('/api/auth', authRouter);
 
 export const start = async () => {
   try {
