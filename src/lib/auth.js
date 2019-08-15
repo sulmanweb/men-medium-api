@@ -13,7 +13,7 @@ export const newToken = async (user) => {
 
 export const authenticateUser = (req, res, next) => {
   let token = req.headers['authorization'];
-  if (token.startsWith('Bearer ')) {
+  if (token && token.startsWith('Bearer ')) {
     // Remove Bearer from string
     token = token.slice(7, token.length);
   }
@@ -46,7 +46,7 @@ export const authenticateUser = (req, res, next) => {
 export const getCurrentUser = (req, res, next) => {
   let token = req.headers['Authorization'];
   req.currentUser = null;
-  if (token.startsWith('Bearer ')) {
+  if (token && token.startsWith('Bearer ')) {
     // Remove Bearer from string
     token = token.slice(7, token.length);
   }

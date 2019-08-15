@@ -9,6 +9,7 @@ import config from './config'
 
 import indexRouter from './routes/index'
 import authRouter from './routes/auth.route'
+import postRouter from './routes/post.route'
 
 const app = express();
 
@@ -33,6 +34,7 @@ app.use(cors());
 
 app.use('/api', indexRouter);
 app.use('/api/auth', authRouter);
+app.use('/api/posts', postRouter);
 
 export const start = async () => {
   try {

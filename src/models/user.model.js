@@ -18,7 +18,9 @@ const userSchema = new mongoose.Schema(
     password: {
       type: String,
       required: true
-    }
+    },
+    posts: [{type: mongoose.SchemaTypes.ObjectId, ref: 'posts'}],
+    sessions: [{type: mongoose.SchemaTypes.ObjectId, ref: 'sessions'}]
   },
   {timestamps: true}
 );
@@ -32,7 +34,6 @@ userSchema.pre('save', function (next) {
     if (err) {
       return next(err)
     }
-    console.log(this.password, hash);
     this.password = hash;
     next()
   })
